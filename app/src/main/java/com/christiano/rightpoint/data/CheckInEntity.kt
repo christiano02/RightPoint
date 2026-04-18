@@ -3,8 +3,8 @@ package com.christiano.rightpoint.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "points_table")
-data class PointEntity(
+@Entity(tableName = "checkIns_table")
+data class CheckInEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val date: String,
