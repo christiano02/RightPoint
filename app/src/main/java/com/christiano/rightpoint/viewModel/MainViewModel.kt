@@ -1,4 +1,4 @@
-package com.christiano.rightpoint
+package com.christiano.rightpoint.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ class MainViewModel(private val dao: CheckInDao) : ViewModel() {
 
     val allCheckIns = dao.listAllTheCheckIns()
 
-    fun addCheckIn(type: String){
+    fun addCheckIn(type: String) {
         viewModelScope.launch {
             val now = LocalDateTime.now()
             val date = now.format(DateTimeFormatter.ofPattern("dd/MM/yy"))
