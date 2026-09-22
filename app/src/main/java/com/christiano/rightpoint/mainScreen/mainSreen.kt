@@ -18,24 +18,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.christiano.rightpoint.data.CheckInEntity
 import com.christiano.rightpoint.viewModel.MainViewModel
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val checkIns by viewModel.allCheckIns.collectAsState(initial = emptyList())
 
+    val checkIns by viewModel
+        .allCheckIns
+        .collectAsState(initial = emptyList())
+
+    MainScreenContent(
+        checkIns = checkIns,
+        onCheckInClick = { type -> viewModel.addCheckIn(type) }
+    )
+}
+
+@Composable
+fun MainScreenContent(
+    checkIns: List<CheckInEntity>, // Substitua 'CheckInItem' pelo nome real da sua classe de dados
+    onCheckInClick: (String) -> Unit
+) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Right Point", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(onClick = { viewModel.addCheckIn("Entry") }) {
+            Button(onClick = { onCheckInClick("Entry") }) {
                 Text("In")
             }
             Button(
-                onClick = { viewModel.addCheckIn("Exit") },
+                onClick = { onCheckInClick("Exit") },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
             ) {
                 Text("Out")
@@ -46,9 +62,11 @@ fun MainScreen(viewModel: MainViewModel) {
 
         LazyColumn {
             items(checkIns) { item ->
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
                     Row(
                         modifier = Modifier
                             .padding(16.dp)
@@ -64,5 +82,25 @@ fun MainScreen(viewModel: MainViewModel) {
                 }
             }
         }
+    }
+}
+
+// 3. O Preview renderiza apenas a versão Stateless com dados falsos (Mocks)
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    // Dados fictícios apenas para visualização no Android Studio
+    val mockData = listOf(
+        CheckInEntity(type = "Entry", date = "21/09/2026", time = "08:00"),
+        CheckInEntity(type = "Exit", date = "21/09/2026", time = "12:00"),
+        CheckInEntity(type = "Entry", date = "21/09/2026", time = "13:00"),
+        CheckInEntity(type = "Exit", date = "21/09/2026", time = "17:00")
+    )
+
+    MaterialTheme {
+        MainScreenContent(
+            checkIns = mockData,
+            onCheckInClick = { /* Ação vazia no preview */ }
+        )
     }
 }
